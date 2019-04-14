@@ -218,9 +218,18 @@ const Since = styled.div`
 `;
 
 class Login extends Component {
-  state = {}
+  state = {
+    isPasswordHidden: true,
+  }
+
+  changeType = () => {
+    const { isPasswordHidden } = this.state;
+    this.setState({ isPasswordHidden: !isPasswordHidden });
+  }
 
   render() {
+    const { history } = this.props;
+    const { isPasswordHidden } = this.state;
     return (
       <Container>
         <Main>
@@ -230,8 +239,8 @@ class Login extends Component {
               <LoginCardTitle src="/images/Title.png" />
               <LoginIdInput placeholder="이메일을 입력해 주세요." />
               <LoginPassword>
-                <PasswordInput placeholder="비밀번호" />
-                <PasswordHiddenButton type="button" value="비밀번호 표시" />
+                <PasswordInput placeholder="비밀번호" type={isPasswordHidden ? 'password' : 'text'} />
+                <PasswordHiddenButton type="button" onClick={() => this.changeType()} value={`비밀번호 ${isPasswordHidden ? '표시' : '숨기기'}`} />
               </LoginPassword>
               <LoginButton type="button" value="로그인" />
               <Or>
@@ -247,7 +256,7 @@ class Login extends Component {
             </LoginCard>
             <SignUpCard>
               <SignUp>계정이 없으신가요?</SignUp>
-              <SignUpButton>가입하기</SignUpButton>
+              <SignUpButton onClick={() => history.push('/signup')}>가입하기</SignUpButton>
             </SignUpCard>
             <DownloadCard>
               <Download>앱을 다운로드하세요.</Download>

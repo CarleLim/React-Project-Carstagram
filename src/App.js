@@ -6,6 +6,7 @@ import {
 
 import Main from './Main';
 import Login from './Login';
+import SignUp from './SignUp';
 
 class App extends Component {
   state = {}
@@ -16,6 +17,7 @@ class App extends Component {
         <div>
           <Route exact path="/" component={Main} />
           <Route path="/login" component={Login} />
+          <Route path="/signup" component={SignUp} />
         </div>
       </Router>
     );
