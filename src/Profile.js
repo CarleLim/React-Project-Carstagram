@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 
-import SettingModal from './Components/SettingModal'
+import SettingModal from './Components/SettingModal';
+import PostModal from './Components/PostModal';
 
 const Contianer = styled.div`
     width: 935px;
@@ -172,6 +173,12 @@ class Profile extends Component {
 
     state= {
         isSettingModalClosed: true,
+        isPostModalClosed: true,
+    }
+
+    isPostModalSwitch = () => {
+        const { isPostModalClosed } = this.state;
+        this.setState({ isPostModalClosed : !isPostModalClosed });
     }
 
     isSettingModalSwitch = () => {
@@ -179,11 +186,12 @@ class Profile extends Component {
         this.setState({ isSettingModalClosed : !isSettingModalClosed });
     }
     render() {
-        const { isSettingModalClosed } = this.state;
+        const { isSettingModalClosed, isPostModalClosed } = this.state;
 
         return (
             <Contianer>
             <SettingModal isSettingModalClosed={isSettingModalClosed} isSettingModalSwitch={this.isSettingModalSwitch} />
+            <PostModal isPostModalClosed={isPostModalClosed} isPostModalSwitch={this.isPostModalSwitch} />
                 <Header>
                     <ProfileImg>
                         <Img src="/images/profile31.png" />
@@ -213,7 +221,7 @@ class Profile extends Component {
                 <Main>
                     <MainImg src="/images/description.PNG" />
                     <SharePhotos>
-                        <SharePhotosImg src="/images/Plus.jpg" />
+                        <SharePhotosImg src="/images/Plus.jpg" onClick={() => this.isPostModalSwitch()} />
                         <Description>사진 및 동영상 공유</Description>
                         <div>사진과 동영상을 공유하면 프로필에 표시됩니다.</div>
                     </SharePhotos>
