@@ -7,6 +7,7 @@ import {
 import Main from './Main';
 import Login from './Login';
 import SignUp from './SignUp';
+import Profile from './Profile';
 
 class App extends Component {
   state = {}
@@ -17,7 +18,8 @@ class App extends Component {
         <div>
           <Route exact path="/" component={Main} />
           <Route path="/login" component={Login} />
-          <Route path="/signup" component={SignUp} />
+          <Route path="/signup" component={SignUp} /> 
+          <Route path="/profile" component={Profile} />
         </div>
       </Router>
     );
