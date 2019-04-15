@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 
+import { auth } from './lib/firebase';
+
 const Container = styled.div`
   height: 100%;
   background: #fafafa;
@@ -218,6 +220,10 @@ const Since = styled.div`
 `;
 
 class Login extends Component {
+  emailRef = React.createRef();
+
+  passwordRef = React.createRef();
+
   state = {
     isPasswordHidden: true,
   }
@@ -225,6 +231,20 @@ class Login extends Component {
   changeType = () => {
     const { isPasswordHidden } = this.state;
     this.setState({ isPasswordHidden: !isPasswordHidden });
+  }
+
+  handleSubmit = (e) => {
+    e.preventDefault();
+    const email = this.emailRef.current.value;
+    const password = this.passwordRef.current.value;
+    auth.signInWithEmailAndPassword(email, password)
+      .then(() => {
+        window.alert('로그인이 완료 되었습니다.')
+      })
+      .catch((err) => {
+        console.log(err.code);
+        err.code === 'auth/wrong-password' ? window.alert('비밀번호가 잘못 입력 되었습니다.') : window.alert('Email이 잘못 입력 되었습니다.')  
+      })
   }
 
   render() {
@@ -235,14 +255,14 @@ class Login extends Component {
         <Main>
           <PhoneImg src="/images/LoginPhoneImg.png" />
           <Card>
-            <LoginCard>
+            <LoginCard onSubmit={this.handleSubmit}>
               <LoginCardTitle src="/images/Title.png" />
-              <LoginIdInput placeholder="이메일을 입력해 주세요." />
+              <LoginIdInput placeholder="이메일을 입력해 주세요." ref={this.emailRef} />
               <LoginPassword>
-                <PasswordInput placeholder="비밀번호" type={isPasswordHidden ? 'password' : 'text'} />
+                <PasswordInput placeholder="비밀번호" type={isPasswordHidden ? 'password' : 'text'} ref={this.passwordRef} />
                 <PasswordHiddenButton type="button" onClick={() => this.changeType()} value={`비밀번호 ${isPasswordHidden ? '표시' : '숨기기'}`} />
               </LoginPassword>
-              <LoginButton type="button" value="로그인" />
+              <LoginButton type="submit" value="로그인" />
               <Or>
                 <OrEmpty />
                 <OrTitle>또는</OrTitle>

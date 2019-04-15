@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 
+import { auth } from './lib/firebase';
+
 const Container = styled.div`
     padding-top: 1rem;
     background: #fafafa;
@@ -16,7 +18,7 @@ const Main = styled.div`
 `;
 
 
-const Card = styled.div`
+const Card = styled.form`
     height: 32rem;
     width: 21.8rem;
     background: #fff;
@@ -199,6 +201,12 @@ const Since = styled.div`
 `;
 
 class SignUp extends Component {
+    emailRef = React.createRef();
+
+    passwordRef = React.createRef();
+
+    confirmPasswordRef = React.createRef();
+
     state = {
         isPasswordHidden: true,
         isComfirmPasswordHidden: true,
@@ -214,6 +222,25 @@ class SignUp extends Component {
         this.setState({ isComfirmPasswordHidden: !isComfirmPasswordHidden });
     }
 
+    handleSubmit = (e) => {
+        e.preventDefault();
+        const { history } = this.props;
+        const email = this.emailRef.current.value;
+        const password = this.passwordRef.current.value;
+        const confirmPassword = this.confirmPasswordRef.current.value;
+        if (password !== confirmPassword) {
+            return window.alert('비밀번호가 일치하지 않습니다.');
+        }
+        return auth.createUserWithEmailAndPassword(email, password)
+            .then(() => {
+                window.alert('회원가입이 완료되었습니다.');
+                history.push('/login');
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+    }
+
     render() {
         const { history } = this.props;
         const { isPasswordHidden, isComfirmPasswordHidden } = this.state;
@@ -221,7 +248,7 @@ class SignUp extends Component {
             <Container>
             {console.log(history)}
                 <Main>
-                    <Card>
+                    <Card onSubmit={this.handleSubmit}>
                         <CardTitle src="images/Title.png" />
                         <FacebookLogin><FacebookImg src="/images/facebookSignup.png" />facebook으로 로그인</FacebookLogin>
                         <Or>
@@ -229,13 +256,13 @@ class SignUp extends Component {
                             <OrTitle>또는</OrTitle>
                             <OrEmpty />
                         </Or>
-                        <Email placeholder="이메일을 입력해주세요." />
+                        <Email placeholder="이메일을 입력해주세요." ref={this.emailRef}/>
                         <PasswordBox>
-                            <Password placeholder="비밀번호" type={isPasswordHidden ? 'password' : 'text'}/>
+                            <Password placeholder="비밀번호" type={isPasswordHidden ? 'password' : 'text'} ref={this.passwordRef}/>
                             <PasswordButton type="button" value={`비밀번호 ${isPasswordHidden ? '표시' : '숨기기'}` } onClick={() => this.passwordChangeType()} />
                         </PasswordBox>
                         <PasswordBox>
-                            <ConfirmPassword placeholder="비밀번호" type={isComfirmPasswordHidden ? 'password' : 'text'}/>
+                            <ConfirmPassword placeholder="비밀번호" type={isComfirmPasswordHidden ? 'password' : 'text'} ref={this.confirmPasswordRef}/>
                             <PasswordButton type="button" value={`비밀번호 ${isComfirmPasswordHidden ? '표시' : '숨기기'}`}  onClick={() => this.confirmPasswordchangeType2()}/>
                         </PasswordBox>
                         <SignUpButton type="submit" value="가입" />

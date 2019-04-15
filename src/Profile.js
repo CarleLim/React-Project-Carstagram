@@ -223,7 +223,7 @@ class Profile extends Component {
                     <SharePhotos>
                         <SharePhotosImg src="/images/profilePostImg.jpg" onClick={() => this.isPostModalSwitch()} />
                         <Description>사진 및 동영상 공유</Description>
-                        <div>사진과 동영상을 공유하면 프로필에 표시됩니다.</div>
+                        <div>사진과 동영상을 공유하면 프로필에 표시됩니다..</div>
                     </SharePhotos>
                 </Main>
                 <Footer>CARTAGRAM 정보 <Since>2019 CARTAGRAM</Since> </Footer>
