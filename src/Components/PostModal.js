@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import LodingSplash from './LodingSplash';
+import { auth, storage, db } from '../lib/firebase';
 
 const Container = styled.div`
     height: 100%;
@@ -13,7 +15,7 @@ const Container = styled.div`
     align-items: center;
 `;
 
-const Modal = styled.div`
+const Modal = styled.form`
     width: 30rem;
     background: #fff;
     border-radius: 12px;
@@ -89,9 +91,13 @@ const Button = styled.input`
 `;
 
 class PostModal extends Component {
+    messageRef = React.createRef();
+
     state = {
         img: '파일선택',
         imgUrl: null,
+        progress: 0,
+        isLodingSplashClosed: false,
     }
 
     onChange = (e) => {
@@ -100,20 +106,69 @@ class PostModal extends Component {
         console.log(imgBlob);
     }
 
+    handleSubmit = (e) => {
+        e.preventDefault();
+        const { img } = this.state;
+        const { user } = this.props;
+        const message = this.messageRef.current.value;
+        const username = user.email.split('@')[0];
+
+        const uploadImg = () => {
+            const imageRef = storage.ref(`images/${user.uid}/${Date.now()}`);
+            return new Promise((resolve, reject) => {
+                imageRef.put(img).on(
+                    'state_changed',
+                    (snapshot) => {
+                        const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                        this.setState({ progress });
+                    },
+                    err => reject(err),
+                    () => imageRef.getDownloadURL().then(url => resolve(url)),
+                );
+            });
+        }
+
+        if (message && message.length > 0) {
+            if (img === '파일선택') {
+                db.ref('data').push({
+                    user: {
+                        name: username,
+                        id: user.email,
+                    },
+                    text: message,
+                    createdAt: Date.now(),
+                });
+            }
+            uploadImg()
+                .then((url) => {
+                    db.ref('data').push({
+                        user: {
+                            name: username,
+                            id: user.email,
+                        },
+                        text: message,
+                        imgUrl: url,
+                        createdAt: Date.now(),
+                    });
+                });
+        }
+    }
+
     render () {
-        const { img, imgUrl } = this.state;
-        const { isPostModalClosed, isPostModalSwitch } = this.props;
+        const { img, imgUrl, progress, isLodingSplashClosed } = this.state;
+        const { isPostModalClosed, isPostModalSwitch, user } = this.props;
         return (
             <Container isPostModalClosed={isPostModalClosed}>
-                <Modal>
+                <Modal onSubmit={this.handleSubmit}>
                     <Title>게시물 만들기</Title>
                     <ImgUploadBox>
                         <UploadFileName value={img.name ? img.name : img} disabled="disabled" readOnly="readonly" />
                         <ImgInput accept="image/*" type="file" id="img-file" onChange={this.onChange}/>
                         <ImgLabel htmlFor="img-file">사진 업로드</ImgLabel>
                     </ImgUploadBox>
+                    {progress !== 0 ? <LodingSplash isLodingSplashClosed={isLodingSplashClosed}/> : null}
                     {imgUrl ? <PreviewImg src={imgUrl} /> : null}
-                    <MessageInput placeholder="문구를 입력해주세요..."/>
+                    <MessageInput placeholder="문구를 입력해주세요..." ref={this.messageRef} />
                     <ButtonBox>
                         <Button type="submit" value="확인"/>
                         <Button type="button" onClick={() => isPostModalSwitch()} value="취소"/>

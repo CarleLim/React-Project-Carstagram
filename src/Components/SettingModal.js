@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { auth } from '../lib/firebase';
 
 const Container = styled.div`
     height: 100%;
@@ -52,7 +53,7 @@ const SettingModal = ({ isSettingModalClosed, isSettingModalSwitch }) => (
             <Button>허가된 앱</Button>
             <Button>알림</Button>
             <Button>공개범위 및 보안</Button>
-            <Button>로그아웃</Button>
+            <Button onClick={() => auth.signOut()}>로그아웃</Button>
             <Button onClick={() => isSettingModalSwitch()}>취소</Button>
         </Modal>
     </Container>

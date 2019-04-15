@@ -248,8 +248,12 @@ class Login extends Component {
   }
 
   render() {
-    const { history } = this.props;
+    const { history, user } = this.props;
     const { isPasswordHidden } = this.state;
+    if (user) {
+      history.push('/');
+      return null;
+    }
     return (
       <Container>
         <Main>

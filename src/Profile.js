@@ -187,18 +187,25 @@ class Profile extends Component {
     }
     render() {
         const { isSettingModalClosed, isPostModalClosed } = this.state;
+        const { user, history, data } = this.props;
 
+        const username = user ? user.email.split('@')[0] : null;
+        const userEmail = user ? user.email : null;
+        if (user === null) {
+            history.push('/login');
+            return null;
+        }
         return (
             <Contianer>
             <SettingModal isSettingModalClosed={isSettingModalClosed} isSettingModalSwitch={this.isSettingModalSwitch} />
-            <PostModal isPostModalClosed={isPostModalClosed} isPostModalSwitch={this.isPostModalSwitch} />
+            <PostModal isPostModalClosed={isPostModalClosed} isPostModalSwitch={this.isPostModalSwitch} user={user} />
                 <Header>
                     <ProfileImg>
                         <Img src="/images/profile.png" />
                     </ProfileImg>
                     <Imformation>
                         <SettingBox>
-                            <ProfileName>Honey-bull</ProfileName>
+                            <ProfileName>{username ? username : null}</ProfileName>
                             <ProfileEdit type="button" value="프로필 편집" />
                             <ProfileSettingIcon src="/images/profileSettingIcon.PNG" onClick={() => this.isSettingModalSwitch()} />
                         </SettingBox>
@@ -207,7 +214,7 @@ class Profile extends Component {
                             <Activity>팔로워<Count>0</Count></Activity>
                             <Activity>팔로우<Count>0</Count></Activity>
                         </Activities>
-                        <UserId>Honey_bull@carstagram.com</UserId>
+                        <UserId>{userEmail ? userEmail : null}</UserId>
                     </Imformation>
                 </Header>
                 <Menu>
