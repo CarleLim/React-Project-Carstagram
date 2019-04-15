@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 
+import SettingModal from './Components/SettingModal'
+
 const Contianer = styled.div`
     width: 935px;
     background: #fafafa;
@@ -167,9 +169,21 @@ const Since = styled.div`
 
 
 class Profile extends Component {
+
+    state= {
+        isSettingModalClosed: true,
+    }
+
+    isSettingModalSwitch = () => {
+        const { isSettingModalClosed } = this.state;
+        this.setState({ isSettingModalClosed : !isSettingModalClosed });
+    }
     render() {
+        const { isSettingModalClosed } = this.state;
+
         return (
             <Contianer>
+            <SettingModal isSettingModalClosed={isSettingModalClosed} isSettingModalSwitch={this.isSettingModalSwitch} />
                 <Header>
                     <ProfileImg>
                         <Img src="/images/profile31.png" />
@@ -178,7 +192,7 @@ class Profile extends Component {
                         <SettingBox>
                             <ProfileName>Honey-bull</ProfileName>
                             <ProfileEdit type="button" value="프로필 편집" />
-                            <ProfileSettingIcon src="/images/profileEditIcon.PNG" />
+                            <ProfileSettingIcon src="/images/profileEditIcon.PNG" onClick={() => this.isSettingModalSwitch()} />
                         </SettingBox>
                         <Activities>
                             <Activity>게시물<Count>0</Count></Activity>
