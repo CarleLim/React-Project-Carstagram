@@ -154,7 +154,7 @@ const Description = styled.div`
 
 const Footer = styled.div`
   height: 6.5rem;
-  width: 52rem;
+  width: 58rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -194,13 +194,13 @@ class Profile extends Component {
             <PostModal isPostModalClosed={isPostModalClosed} isPostModalSwitch={this.isPostModalSwitch} />
                 <Header>
                     <ProfileImg>
-                        <Img src="/images/profile31.png" />
+                        <Img src="/images/profile.png" />
                     </ProfileImg>
                     <Imformation>
                         <SettingBox>
                             <ProfileName>Honey-bull</ProfileName>
                             <ProfileEdit type="button" value="프로필 편집" />
-                            <ProfileSettingIcon src="/images/profileEditIcon.PNG" onClick={() => this.isSettingModalSwitch()} />
+                            <ProfileSettingIcon src="/images/profileSettingIcon.PNG" onClick={() => this.isSettingModalSwitch()} />
                         </SettingBox>
                         <Activities>
                             <Activity>게시물<Count>0</Count></Activity>
@@ -212,16 +212,16 @@ class Profile extends Component {
                 </Header>
                 <Menu>
                     <MenuBox>
-                        <Element><ElementIcon src="/images/postImg.PNG" />게시물</Element>
-                        <Element><ElementIcon src="/images/igtvImg.PNG" />IGTV</Element>
-                        <Element><ElementIcon src="/images/saveImg.PNG" />저장됨</Element>
-                        <Element><ElementIcon src="/images/tagImg.PNG" />태그됨</Element>
+                        <Element><ElementIcon src="/images/profilePostImg.PNG" />게시물</Element>
+                        <Element><ElementIcon src="/images/profileIgtvImg.PNG" />IGTV</Element>
+                        <Element><ElementIcon src="/images/profileSaveImg.PNG" />저장됨</Element>
+                        <Element><ElementIcon src="/images/profileTagImg.PNG" />태그됨</Element>
                     </MenuBox>
                 </Menu>
                 <Main>
-                    <MainImg src="/images/description.PNG" />
+                    <MainImg src="/images/profileMainImg.PNG" />
                     <SharePhotos>
-                        <SharePhotosImg src="/images/Plus.jpg" onClick={() => this.isPostModalSwitch()} />
+                        <SharePhotosImg src="/images/profilePostImg.jpg" onClick={() => this.isPostModalSwitch()} />
                         <Description>사진 및 동영상 공유</Description>
                         <div>사진과 동영상을 공유하면 프로필에 표시됩니다.</div>
                     </SharePhotos>

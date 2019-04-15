@@ -8,6 +8,7 @@ import Main from './Main';
 import Login from './Login';
 import SignUp from './SignUp';
 import Profile from './Profile';
+import Nav from './Components/Nav';
 
 class App extends Component {
   state = {}
@@ -16,6 +17,7 @@ class App extends Component {
     return (
       <Router>
         <div>
+          <Route component={Nav} />
           <Route exact path="/" component={Main} />
           <Route path="/login" component={Login} />
           <Route path="/signup" component={SignUp} /> 
