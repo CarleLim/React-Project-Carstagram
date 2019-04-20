@@ -187,7 +187,7 @@ class Profile extends Component {
     }
     render() {
         const { isSettingModalClosed, isPostModalClosed } = this.state;
-        const { user, history, data } = this.props;
+        const { user, history } = this.props;
 
         const username = user ? user.email.split('@')[0] : null;
         const userEmail = user ? user.email : null;

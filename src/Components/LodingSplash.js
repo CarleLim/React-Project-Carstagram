@@ -16,7 +16,7 @@ const Container = styled.div`
 
 const LodingSplash = ({ isLodingSplashClosed }) => (
     <Container isLodingSplashClosed={isLodingSplashClosed}>
-        <img src="https://webat.net/wp-content/uploads/2018/12/css-loading-spinners.gif" />
+        <img src="https://webat.net/wp-content/uploads/2018/12/css-loading-spinners.gif" alt="" />
     </Container>
 );
 

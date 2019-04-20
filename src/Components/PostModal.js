@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import LodingSplash from './LodingSplash';
-import { auth, storage, db } from '../lib/firebase';
+import { storage, db } from '../lib/firebase';
 
 const Container = styled.div`
     height: 100%;
@@ -156,7 +156,7 @@ class PostModal extends Component {
 
     render () {
         const { img, imgUrl, progress, isLodingSplashClosed } = this.state;
-        const { isPostModalClosed, isPostModalSwitch, user } = this.props;
+        const { isPostModalClosed, isPostModalSwitch } = this.props;
         return (
             <Container isPostModalClosed={isPostModalClosed}>
                 <Modal onSubmit={this.handleSubmit}>
