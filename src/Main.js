@@ -66,7 +66,7 @@ class Main extends Component {
           ))}
         </CardContainer>
         <SideContainer>
-          <Profile>
+          <Profile onClick={() => history.push('/profile')}>
             <ProfileImg src="/images/MainProfileImg.png" />
             <User>
               <UserName>{user ? user.email.split('@')[0]: null}</UserName>

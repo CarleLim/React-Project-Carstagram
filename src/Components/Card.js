@@ -144,7 +144,6 @@ class Card extends Component {
 
       return (
       <Container>
-        {console.log(data)}
           <Title>
             <ProfileImg src="/images/MainProfileImg.png" />
             <UserName onClick={() => history.push(`/profile?uid=${data[1].user.name}`)}>

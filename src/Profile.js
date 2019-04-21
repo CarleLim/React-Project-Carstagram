@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import SettingModal from './Components/SettingModal';
 import PostModal from './Components/PostModal';
+import { db } from './lib/firebase';
 
 const Contianer = styled.div`
     width: 935px;
@@ -57,6 +58,21 @@ const ProfileEdit = styled.input`
     box-sizing: border-box;
     cursor: pointer;
     padding: 0.3rem 0.56rem;
+`;
+
+const FollowButton = styled.input`
+    width: 6rem;
+    height: 1.87rem;
+    background: ${({ following }) => (following ? 'transparent' : '#3897f0')};
+    border: 1px solid ${({ following }) => (following ? '#dbdbdb' : '#3897f0')};;
+    border-radius: 4px;
+    box-sizing: border-box;
+    cursor: pointer;
+    font-size: 0.87rem;
+    font-weight: 600;
+    padding: 0.3rem 0.56rem;
+    color: ${({ following }) => (following ? '#262626' : '#fff')};
+    
 `;
 
 const ProfileSettingIcon = styled.img`
@@ -174,29 +190,72 @@ class Profile extends Component {
     state= {
         isSettingModalClosed: true,
         isPostModalClosed: true,
-    }
+    };
 
     isPostModalSwitch = () => {
         const { isPostModalClosed } = this.state;
         this.setState({ isPostModalClosed : !isPostModalClosed });
-    }
+    };
 
     isSettingModalSwitch = () => {
         const { isSettingModalClosed } = this.state;
         this.setState({ isSettingModalClosed : !isSettingModalClosed });
-    }
+    };
+
+    isFollow = () => {
+        const { user, history, data } = this.props;
+        const params = new URLSearchParams(history.location.search);
+        const uid = params.get('uid');
+        const dataEntries = data ? Object.entries(data) : null;
+        const uidPosts = dataEntries ? dataEntries.filter(e => e[1].user.name === uid) : null;
+        const follower = uidPosts ? uidPosts[0][1].user.follower : null;
+        const followerUser = follower ? Object.values(follower).find(e => e === user.email) : null
+
+        for (let i = 0; i < uidPosts.length; i += 1) {
+            const dataKey = Object.keys(data).find(key => data[key] === uidPosts[i][1]);
+            if (!follower) {
+                db.ref(`/data/${dataKey}/user/follower`).push(user.email);
+                console.log('없어서 추가함')
+            } else if (followerUser) {
+                const followerData = uidPosts[i][1].user.follower
+                const followerKey = Object.keys(followerData).find(key => followerData[key] === user.email);
+                db.ref(`/data/${dataKey}/user/follower/${followerKey}`).remove();
+                console.log('팔로잉 중이여서 삭제함')
+            } else {
+                db.ref(`/data/${dataKey}/user/follower`).push(user.email);
+                console.log('추가')
+            }
+        }
+        console.log(uidPosts);
+    };
+
+//user 팔로워 팔로우 기능 데이터 핸들링 해야함
+
     render() {
         const { isSettingModalClosed, isPostModalClosed } = this.state;
-        const { user, history } = this.props;
+        const { user, history, data } = this.props;
 
         const username = user ? user.email.split('@')[0] : null;
         const userEmail = user ? user.email : null;
+        const params = new URLSearchParams(history.location.search);
+        const uid = params.get('uid');
+        const dataEntries = data ? Object.entries(data) : null;
+        const uidPosts = dataEntries ? dataEntries.filter(e => e[1].user.name === uid) : null;
+        const myPosts = dataEntries ? dataEntries.filter(e => e[1].user.name === username) : null;
+        const userIdForAllData = dataEntries ? dataEntries.map(e => e[1].user.id) : null;
+        const userIdForCurrentData = userIdForAllData ? userIdForAllData.filter(e => e.split('@')[0] === uid)[0] : null;
+        const uidFolloweData = uidPosts ? uidPosts.map(e => e[1].user.follower)[0] : null;
+        const uidFollowerData = dataEntries ? dataEntries.map(e => e[1].user.follower) : null;
+        const uidFollowerCount = uidFolloweData ? Object.values(uidFolloweData).length : null;
+        const following = uidFolloweData ? Object.values(uidFolloweData).find(e => e === userEmail) : null;
+
         if (user === null) {
             history.push('/login');
             return null;
         }
         return (
             <Contianer>
+            {console.log(data)}
             <SettingModal isSettingModalClosed={isSettingModalClosed} isSettingModalSwitch={this.isSettingModalSwitch} />
             <PostModal isPostModalClosed={isPostModalClosed} isPostModalSwitch={this.isPostModalSwitch} user={user} />
                 <Header>
@@ -205,16 +264,16 @@ class Profile extends Component {
                     </ProfileImg>
                     <Imformation>
                         <SettingBox>
-                            <ProfileName>{username ? username : null}</ProfileName>
-                            <ProfileEdit type="button" value="프로필 편집" />
+                            <ProfileName>{username && uid ? uid : username}</ProfileName>
+                            {uid && uid !== username ? <FollowButton following={following} type="button" value={following ? '팔로잉' : '팔로우'} onClick={() => this.isFollow()}/> : <ProfileEdit type="button" value="프로필 편집" />}
                             <ProfileSettingIcon src="/images/profileSettingIcon.PNG" onClick={() => this.isSettingModalSwitch()} />
                         </SettingBox>
                         <Activities>
-                            <Activity>게시물<Count>0</Count></Activity>
-                            <Activity>팔로워<Count>0</Count></Activity>
+                            <Activity>게시물<Count>{uid ? uidPosts.length : myPosts.length}</Count></Activity>
+                            <Activity>팔로워<Count>{uid && uidFollowerCount ? uidFollowerCount : '0'}</Count></Activity>
                             <Activity>팔로우<Count>0</Count></Activity>
                         </Activities>
-                        <UserId>{userEmail ? userEmail : null}</UserId>
+                        <UserId>{userIdForCurrentData ? userIdForCurrentData : userEmail}</UserId>
                     </Imformation>
                 </Header>
                 <Menu>
