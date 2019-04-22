@@ -60,9 +60,8 @@ class Main extends Component {
     return (
       <Container>
         <CardContainer>
-          {console.log(user)}
-          {(Object.entries(data).reverse()).map(e => (
-            <Card history={history} user={user} data={e} />
+          {(Object.entries(data).reverse()).map((e, i) => (
+            <Card key={i} history={history} user={user} data={e} />
           ))}
         </CardContainer>
         <SideContainer>

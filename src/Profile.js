@@ -207,26 +207,22 @@ class Profile extends Component {
         const params = new URLSearchParams(history.location.search);
         const uid = params.get('uid');
         const dataEntries = data ? Object.entries(data) : null;
-        const uidPosts = dataEntries ? dataEntries.filter(e => e[1].user.name === uid) : null;
-        const follower = uidPosts ? uidPosts[0][1].user.follower : null;
-        const followerUser = follower ? Object.values(follower).find(e => e === user.email) : null
+        const myPosts = dataEntries ? dataEntries.filter(e => e[1].user.name === uid) : null;
+        const follower = myPosts ? myPosts[0][1].user.follower : null;
+        const following = follower ? Object.values(follower).find(e => e === user.email) : null
 
-        for (let i = 0; i < uidPosts.length; i += 1) {
-            const dataKey = Object.keys(data).find(key => data[key] === uidPosts[i][1]);
+        for (let i = 0; i < myPosts.length; i += 1) {
+            const dataKey = Object.keys(data).find(key => data[key] === myPosts[i][1]);
             if (!follower) {
                 db.ref(`/data/${dataKey}/user/follower`).push(user.email);
-                console.log('없어서 추가함')
-            } else if (followerUser) {
-                const followerData = uidPosts[i][1].user.follower
+            } else if (following) {
+                const followerData = myPosts[i][1].user.follower
                 const followerKey = Object.keys(followerData).find(key => followerData[key] === user.email);
                 db.ref(`/data/${dataKey}/user/follower/${followerKey}`).remove();
-                console.log('팔로잉 중이여서 삭제함')
             } else {
                 db.ref(`/data/${dataKey}/user/follower`).push(user.email);
-                console.log('추가')
             }
         }
-        console.log(uidPosts);
     };
 
     render() {
@@ -237,15 +233,15 @@ class Profile extends Component {
         const userEmail = user ? user.email : null;
         const params = new URLSearchParams(history.location.search);
         const uid = params.get('uid');
+
         const dataEntries = data ? Object.entries(data) : null;
-        const uidPosts = dataEntries ? dataEntries.filter(e => e[1].user.name === uid) : null;
-        const userIdForAllData = dataEntries ? dataEntries.map(e => e[1].user.id) : null;
-        const userIdForCurrentData = userIdForAllData ? userIdForAllData.filter(e => e.split('@')[0] === uid)[0] : null;
-        const uidFolloweData = uidPosts ? uidPosts.map(e => e[1].user.follower)[0] : null;
-        const uidFollowerData = dataEntries ? dataEntries.map(e => e[1].user.follower)[3] : null;
-        // const uidFollowerDataCount = uidFollowerData ? uidFollowerData.map(e => e[1]) : null;
-        const uidFollowerCount = uidFolloweData ? Object.values(uidFolloweData).length : null;
-        const following = uidFolloweData ? Object.values(uidFolloweData).find(e => e === userEmail) : null;
+        const myPosts = dataEntries ? dataEntries.filter(e => e[1].user.name === uid) : null;
+        const userId = dataEntries ? dataEntries.map(e => e[1].user.id).filter(e => e.split('@')[0] === uid)[0] : null;
+        const myFollowerData = myPosts ? myPosts.map(e => e[1].user.follower)[0] : null;
+        const followerData = dataEntries ? dataEntries.map(e => e[1].user.follower).filter(e => e !== undefined) : null;
+        const followCount = followerData ? followerData.map(e => Object.values(e)).filter(e => e.includes(userId)).length : null;
+        const followerCount = myFollowerData ? Object.values(myFollowerData).length : null;
+        const following = myFollowerData ? Object.values(myFollowerData).find(e => e === userEmail) : null;
 
         if (user === null) {
             history.push('/login');
@@ -253,7 +249,7 @@ class Profile extends Component {
         }
         return (
             <Contianer>
-            {console.log(uidFollowerData)}
+            {console.log(myPosts)}
             <SettingModal isSettingModalClosed={isSettingModalClosed} isSettingModalSwitch={this.isSettingModalSwitch} />
             <PostModal isPostModalClosed={isPostModalClosed} isPostModalSwitch={this.isPostModalSwitch} user={user} />
                 <Header>
@@ -267,11 +263,11 @@ class Profile extends Component {
                             <ProfileSettingIcon src="/images/profileSettingIcon.PNG" onClick={() => this.isSettingModalSwitch()} />
                         </SettingBox>
                         <Activities>
-                            <Activity>게시물<Count>{uidPosts.length}</Count></Activity>
-                            <Activity>팔로워<Count>{uidFollowerCount ? uidFollowerCount : '0'}</Count></Activity>
-                            <Activity>팔로우<Count>0</Count></Activity>
+                            <Activity>게시물<Count>{myPosts.length}</Count></Activity>
+                            <Activity>팔로워<Count>{followerCount ? followerCount : '0'}</Count></Activity>
+                            <Activity>팔로우<Count>{followCount ? followCount : '0'}</Count></Activity>
                         </Activities>
-                        <UserId>{userIdForCurrentData ? userIdForCurrentData : userEmail}</UserId>
+                        <UserId>{userId ? userId : userEmail}</UserId>
                     </Imformation>
                 </Header>
                 <Menu>
