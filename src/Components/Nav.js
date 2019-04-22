@@ -60,7 +60,7 @@ const Button = styled.img`
     cursor: pointer;
 `;
 
-const Nav = ({ location: { pathname }, history }) => (
+const Nav = ({ location: { pathname }, history, user }) => (
     (pathname.startsWith('/login') || pathname.startsWith('/signup'))
         ? null
         : (
@@ -72,7 +72,7 @@ const Nav = ({ location: { pathname }, history }) => (
                         <MenuBox>
                             <Button src="/images/NavCompass.png" />
                             <Button src="/images/NavHeart.png" />
-                            <Button src="/images/NavProfile.png" onClick={() => history.push('/profile')}/>
+                            <Button src="/images/NavProfile.png" onClick={() => history.push(`/profile?uid=${user.email.split('@')[0]}`)}/>
                         </MenuBox>
                     </Menu>
                 </Bar>

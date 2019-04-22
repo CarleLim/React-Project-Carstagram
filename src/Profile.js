@@ -229,8 +229,6 @@ class Profile extends Component {
         console.log(uidPosts);
     };
 
-//user 팔로워 팔로우 기능 데이터 핸들링 해야함
-
     render() {
         const { isSettingModalClosed, isPostModalClosed } = this.state;
         const { user, history, data } = this.props;
@@ -241,11 +239,11 @@ class Profile extends Component {
         const uid = params.get('uid');
         const dataEntries = data ? Object.entries(data) : null;
         const uidPosts = dataEntries ? dataEntries.filter(e => e[1].user.name === uid) : null;
-        const myPosts = dataEntries ? dataEntries.filter(e => e[1].user.name === username) : null;
         const userIdForAllData = dataEntries ? dataEntries.map(e => e[1].user.id) : null;
         const userIdForCurrentData = userIdForAllData ? userIdForAllData.filter(e => e.split('@')[0] === uid)[0] : null;
         const uidFolloweData = uidPosts ? uidPosts.map(e => e[1].user.follower)[0] : null;
-        const uidFollowerData = dataEntries ? dataEntries.map(e => e[1].user.follower) : null;
+        const uidFollowerData = dataEntries ? dataEntries.map(e => e[1].user.follower)[3] : null;
+        // const uidFollowerDataCount = uidFollowerData ? uidFollowerData.map(e => e[1]) : null;
         const uidFollowerCount = uidFolloweData ? Object.values(uidFolloweData).length : null;
         const following = uidFolloweData ? Object.values(uidFolloweData).find(e => e === userEmail) : null;
 
@@ -255,7 +253,7 @@ class Profile extends Component {
         }
         return (
             <Contianer>
-            {console.log(data)}
+            {console.log(uidFollowerData)}
             <SettingModal isSettingModalClosed={isSettingModalClosed} isSettingModalSwitch={this.isSettingModalSwitch} />
             <PostModal isPostModalClosed={isPostModalClosed} isPostModalSwitch={this.isPostModalSwitch} user={user} />
                 <Header>
@@ -264,13 +262,13 @@ class Profile extends Component {
                     </ProfileImg>
                     <Imformation>
                         <SettingBox>
-                            <ProfileName>{username && uid ? uid : username}</ProfileName>
-                            {uid && uid !== username ? <FollowButton following={following} type="button" value={following ? '팔로잉' : '팔로우'} onClick={() => this.isFollow()}/> : <ProfileEdit type="button" value="프로필 편집" />}
+                            <ProfileName>{uid}</ProfileName>
+                            {uid !== username ? <FollowButton following={following} type="button" value={following ? '팔로잉' : '팔로우'} onClick={() => this.isFollow()}/> : <ProfileEdit type="button" value="프로필 편집" />}
                             <ProfileSettingIcon src="/images/profileSettingIcon.PNG" onClick={() => this.isSettingModalSwitch()} />
                         </SettingBox>
                         <Activities>
-                            <Activity>게시물<Count>{uid ? uidPosts.length : myPosts.length}</Count></Activity>
-                            <Activity>팔로워<Count>{uid && uidFollowerCount ? uidFollowerCount : '0'}</Count></Activity>
+                            <Activity>게시물<Count>{uidPosts.length}</Count></Activity>
+                            <Activity>팔로워<Count>{uidFollowerCount ? uidFollowerCount : '0'}</Count></Activity>
                             <Activity>팔로우<Count>0</Count></Activity>
                         </Activities>
                         <UserId>{userIdForCurrentData ? userIdForCurrentData : userEmail}</UserId>

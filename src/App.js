@@ -33,7 +33,7 @@ class App extends Component {
     return (
       <Router>
         <div>
-          <Route component={Nav} />
+          <Route component={withUser(Nav)} />
           <Route exact path="/" component={withUser(Main)} />
           <Route path="/login" component={withUser(Login)} />
           <Route path="/signup" component={withUser(SignUp)} /> 

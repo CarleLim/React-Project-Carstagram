@@ -60,13 +60,13 @@ class Main extends Component {
     return (
       <Container>
         <CardContainer>
-          {console.log(data)}
+          {console.log(user)}
           {(Object.entries(data).reverse()).map(e => (
             <Card history={history} user={user} data={e} />
           ))}
         </CardContainer>
         <SideContainer>
-          <Profile onClick={() => history.push('/profile')}>
+          <Profile onClick={() => history.push(`/profile?uid=${user.email.split('@')[0]}`)} >
             <ProfileImg src="/images/MainProfileImg.png" />
             <User>
               <UserName>{user ? user.email.split('@')[0]: null}</UserName>
