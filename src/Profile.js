@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import SettingModal from './Components/SettingModal';
 import PostModal from './Components/PostModal';
+import MyCard from './Components/MyCard'
 import { db } from './lib/firebase';
 
 const Contianer = styled.div`
@@ -136,19 +137,21 @@ const ElementIcon = styled.img`
 `;
 
 const Main = styled.div`
-    height: 23.7rem;
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
     background: #fff;
 `;
 
 const MainImg = styled.img`
+    height: 23.7em;
     width: 23.7rem;
 `;
 
 const SharePhotos = styled.div`
     height: 23.7rem;
-    width: 38.5rem;
+    width: 34.5rem;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -184,6 +187,9 @@ const Since = styled.div`
   color: #999;
 `;
 
+const MainBox = styled.div`
+    display: flex;
+`;
 
 class Profile extends Component {
 
@@ -236,6 +242,7 @@ class Profile extends Component {
 
         const dataEntries = data ? Object.entries(data) : null;
         const myPosts = dataEntries ? dataEntries.filter(e => e[1].user.name === uid) : null;
+        const myData = dataEntries ? dataEntries.find(e => e[1].user.name === uid) : null;
         const userId = dataEntries ? dataEntries.map(e => e[1].user.id).filter(e => e.split('@')[0] === uid)[0] : null;
         const myFollowerData = myPosts ? myPosts.map(e => e[1].user.follower)[0] : null;
         const followerData = dataEntries ? dataEntries.map(e => e[1].user.follower).filter(e => e !== undefined) : null;
@@ -279,13 +286,20 @@ class Profile extends Component {
                     </MenuBox>
                 </Menu>
                 <Main>
-                    <MainImg src="/images/profileMainImg.PNG" />
-                    <SharePhotos>
-                        <SharePhotosImg src="/images/profilePostImg.jpg" onClick={() => this.isPostModalSwitch()} />
-                        <Description>사진 및 동영상 공유</Description>
-                        <div>사진과 동영상을 공유하면 프로필에 표시됩니다..</div>
-                    </SharePhotos>
+                    {myData ? myPosts.map((e, i) => (
+                        <MyCard key={i} data={e} />
+                    )) : 
+                    <MainBox>
+                        <MainImg src="/images/profileMainImg.PNG" />
+                        <SharePhotos>
+                            <SharePhotosImg src="/images/profilePostImg.jpg" onClick={() => this.isPostModalSwitch()} />
+                            <Description>사진 및 동영상 공유</Description>
+                            <div>사진과 동영상을 공유하면 프로필에 표시됩니다..</div>
+                        </SharePhotos>
+                    </MainBox>
+                    }
                 </Main>
+                    
                 <Footer>CARTAGRAM 정보 <Since>2019 CARTAGRAM</Since> </Footer>
             </Contianer>
         );
