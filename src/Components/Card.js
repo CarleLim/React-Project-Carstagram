@@ -82,6 +82,7 @@ const Comments = styled.div`
 const PostDataTime = styled.div`
     font-size: 0.65rem;
     color: #999
+    margin-top: 0.3rem;
 `;
 
 

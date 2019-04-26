@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import styled from 'styled-components';
 
 import SettingModal from './Components/SettingModal';
-import PostModal from './Components/PostModal';
+import PostUploadModal from './Components/PostUploadModal';
 import MyCard from './Components/MyCard'
 import { db } from './lib/firebase';
 
 const Contianer = styled.div`
+    position: relative;
+    z-index: 1;
     width: 935px;
     background: #fafafa;
     margin: 0 auto;
@@ -137,9 +139,11 @@ const ElementIcon = styled.img`
 `;
 
 const Main = styled.div`
+    position: relative;
+    z-index: 1;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: space-around;
     flex-wrap: wrap;
     background: #fff;
 `;
@@ -195,12 +199,12 @@ class Profile extends Component {
 
     state= {
         isSettingModalClosed: true,
-        isPostModalClosed: true,
+        isPostUploadModalClosed: true,
     };
 
-    isPostModalSwitch = () => {
-        const { isPostModalClosed } = this.state;
-        this.setState({ isPostModalClosed : !isPostModalClosed });
+    isPostUploadModalSwitch = () => {
+        const { isPostUploadModalClosed } = this.state;
+        this.setState({ isPostUploadModalClosed : !isPostUploadModalClosed });
     };
 
     isSettingModalSwitch = () => {
@@ -232,7 +236,7 @@ class Profile extends Component {
     };
 
     render() {
-        const { isSettingModalClosed, isPostModalClosed } = this.state;
+        const { isSettingModalClosed, isPostUploadModalClosed } = this.state;
         const { user, history, data } = this.props;
 
         const username = user ? user.email.split('@')[0] : null;
@@ -258,7 +262,7 @@ class Profile extends Component {
             <Contianer>
             {console.log(myPosts)}
             <SettingModal isSettingModalClosed={isSettingModalClosed} isSettingModalSwitch={this.isSettingModalSwitch} />
-            <PostModal isPostModalClosed={isPostModalClosed} isPostModalSwitch={this.isPostModalSwitch} user={user} />
+            <PostUploadModal isPostUploadModalClosed={isPostUploadModalClosed} isPostUploadModalSwitch={this.isPostUploadModalSwitch} user={user} />
                 <Header>
                     <ProfileImg>
                         <Img src="/images/profile.png" />
@@ -287,12 +291,12 @@ class Profile extends Component {
                 </Menu>
                 <Main>
                     {myData ? myPosts.map((e, i) => (
-                        <MyCard key={i} data={e} />
+                    <MyCard key={i} data={e} />
                     )) : 
                     <MainBox>
                         <MainImg src="/images/profileMainImg.PNG" />
                         <SharePhotos>
-                            <SharePhotosImg src="/images/profilePostImg.jpg" onClick={() => this.isPostModalSwitch()} />
+                            <SharePhotosImg src="/images/profilePostImg.jpg" onClick={() => this.isPostUploadModalSwitch()} />
                             <Description>사진 및 동영상 공유</Description>
                             <div>사진과 동영상을 공유하면 프로필에 표시됩니다..</div>
                         </SharePhotos>
