@@ -42,11 +42,11 @@ class MyCard extends Component {
 
   render() {
     const { isPostModalClosed } = this.state;
-    const { data, user } = this.props;
+    const { data, user, history } = this.props;
 
       return (
       <Container onClick={() => this.isPostModalSwitch()} isPostModalClosed={isPostModalClosed}>
-      <PostModal isPostModalClosed={isPostModalClosed} isPostModalSwitch={this.isPostModalSwitch} data={data} />
+      <PostModal isPostModalClosed={isPostModalClosed} isPostModalSwitch={this.isPostModalSwitch} data={data} user={user} history={history}/>
         <Img src={data[1].imgUrl} />
       </Container>
       );

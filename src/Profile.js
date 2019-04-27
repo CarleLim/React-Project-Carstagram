@@ -217,16 +217,16 @@ class Profile extends Component {
         const params = new URLSearchParams(history.location.search);
         const uid = params.get('uid');
         const dataEntries = data ? Object.entries(data) : null;
-        const myPosts = dataEntries ? dataEntries.filter(e => e[1].user.name === uid) : null;
-        const follower = myPosts ? myPosts[0][1].user.follower : null;
+        const uidPosts = dataEntries ? dataEntries.filter(e => e[1].user.name === uid) : null;
+        const follower = uidPosts ? uidPosts[0][1].user.follower : null;
         const following = follower ? Object.values(follower).find(e => e === user.email) : null
 
-        for (let i = 0; i < myPosts.length; i += 1) {
-            const dataKey = Object.keys(data).find(key => data[key] === myPosts[i][1]);
+        for (let i = 0; i < uidPosts.length; i += 1) {
+            const dataKey = Object.keys(data).find(key => data[key] === uidPosts[i][1]);
             if (!follower) {
                 db.ref(`/data/${dataKey}/user/follower`).push(user.email);
             } else if (following) {
-                const followerData = myPosts[i][1].user.follower
+                const followerData = uidPosts[i][1].user.follower
                 const followerKey = Object.keys(followerData).find(key => followerData[key] === user.email);
                 db.ref(`/data/${dataKey}/user/follower/${followerKey}`).remove();
             } else {
@@ -291,7 +291,7 @@ class Profile extends Component {
                 </Menu>
                 <Main>
                     {myData ? myPosts.map((e, i) => (
-                    <MyCard key={i} data={e} />
+                    <MyCard key={i} data={e} user={user} history={history} />
                     )) : 
                     <MainBox>
                         <MainImg src="/images/profileMainImg.PNG" />
