@@ -9,6 +9,7 @@ const Container = styled.div`
     left: 0;
     background: rgba(0, 0, 0, 0.5);
     position: fixed;
+    z-index: 4;
     display: ${({ isSettingModalClosed }) => (isSettingModalClosed ? 'none' : 'flex')};
     justify-content: center;
     align-items: center;

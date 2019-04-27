@@ -7,7 +7,7 @@ const Container = styled.div`
     height: 18.2rem;
     width: 18.2rem;
     position: relative ;
-    z-index: -1;
+    z-index: -2;
     border: 1px solid #e6e6e6;
     border-radius: 4px;
     margin-bottom: 1.1rem;

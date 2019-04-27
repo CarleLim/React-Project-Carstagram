@@ -18,6 +18,24 @@ const Container = styled.div`
     align-items: center;
 `;
 
+const Card = styled.div`
+    flex: 59;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+`;
+
+const Close = styled.div`
+    flex: 1;
+    height: 2rem;
+    color: #fff;
+    margin-bottom: 48rem;
+    top: 0;
+    font-size: 2rem;
+    font-weight: 600;
+    cursor: pointer;
+`;
+
 const Img = styled.img`
     height: 40rem;
 `;
@@ -27,13 +45,20 @@ const PostData = styled.div`
     width: 20rem;
     background: #fafafa;
     font-size: 0.75rem;
+    display: flex;
+    flex-direction: column;
 `;
 
 const Title = styled.div`
+    flex: 1;
     height: 4.5rem;
     display: flex;
     align-items: center;
     border-bottom: 1px solid #efefef;
+`;
+
+const Main = styled.div`
+    flex: 7;
 `;
 
 const ProfileImg = styled.img`
@@ -76,6 +101,7 @@ const Text = styled.div`
 const Wrap = styled.div`
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
 `
 
 const CreatedAt = styled.div`
@@ -86,7 +112,23 @@ const RepliesBox = styled.div`
     display: flex;
     align-items: center;
     margin-top: 1rem;
+    padding-right: 1rem;
 `
+
+const PostComment = styled.form`
+    flex: 1;
+    border-top: 1px solid #e6e6e6;
+    display: flex;
+    align-items: center;
+`;
+
+const PostCommentInput = styled.input`
+    border: 0;
+    outline: 0;
+    color: #262626;
+    font-size: 0.87rem;
+    margin-left: 1rem;
+`;
 
 class PostModal extends Component {
 
@@ -106,34 +148,44 @@ class PostModal extends Component {
         return (
             <Container isPostModalClosed={isPostModalClosed}>
             {console.log(data[1].text)}
-                <Img src={data[1].imgUrl}/>
-                <PostData>
-                    <Title>
-                        <ProfileImg src="/images/MainProfileImg.png" />
-                        <UserName>{data[1].user.name}</UserName>
-                        {uid !== user.email.split('@')[0] ?
-                            <FollowButton
-                                value={isFollowing ? '팔로잉' : '팔로우'}
-                                type='button'
-                                isFollowing={isFollowing}
-                                onClick={(uid, isFollowing) => this.isFollow(uid, isFollowing)}
-                            />
-                        : null}
-                    </Title>
-                    <TextBox>
-                        <ProfileImg src="/images/MainProfileImg.png" />
-                        <Wrap>
-                        <UserName>{data[1].user.name}</UserName><Text>{data[1].text}</Text>
-                        </Wrap>
-                        <CreatedAt>{moment(data[1].createdAt).fromNow()}</CreatedAt>
-                    </TextBox>
-                    {repliesData ? repliesData.map(e => (
-                        <RepliesBox>
+                <Card>
+                    <Img src={data[1].imgUrl}/>
+                    <PostData>
+                        <Title>
                             <ProfileImg src="/images/MainProfileImg.png" />
-                            <UserName>{e[1].user}</UserName>{e[1].replies}
-                        </RepliesBox>
-                    )) : null }
-                </PostData>
+                            <UserName>{data[1].user.name}</UserName>
+                            {uid !== user.email.split('@')[0] ?
+                                <FollowButton
+                                    value={isFollowing ? '팔로잉' : '팔로우'}
+                                    type='button'
+                                    isFollowing={isFollowing}
+                                    onClick={(uid, isFollowing) => this.isFollow(uid, isFollowing)}
+                                />
+                            : null}
+                        </Title>
+                        <Main>
+                            <TextBox>
+                                <ProfileImg src="/images/MainProfileImg.png" />
+                                <Wrap>
+                                <UserName>{data[1].user.name}</UserName><Text>{data[1].text}</Text>
+                                </Wrap>
+                                <CreatedAt>{moment(data[1].createdAt).fromNow()}</CreatedAt>
+                            </TextBox>
+                            {repliesData ? repliesData.map(e => (
+                                <RepliesBox>
+                                    <ProfileImg src="/images/MainProfileImg.png" />
+                                    <Wrap>
+                                        <UserName>{e[1].user}</UserName>{e[1].replies}
+                                    </Wrap>
+                                </RepliesBox>
+                            )) : null }
+                        </Main>
+                        <PostComment>
+                            <PostCommentInput placeholder="댓글달기..." />
+                        </PostComment>
+                    </PostData>
+                </Card>
+                <Close onClick={() => isPostModalSwitch()}>x</Close>
             </Container>      
         );
     }
